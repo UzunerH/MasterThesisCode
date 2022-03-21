@@ -1,0 +1,158 @@
+const int sBox[] = { 
+
+ 0xCC, 0xC5, 0xC6, 0xCB, 0xC9, 0xC0, 0xCA, 0xCD, 0xC3, 0xCE, 0xCF, 0xC8, 0xC4, 0xC7, 0xC1, 0xC2,
+ 0x5C, 0x55, 0x56, 0x5B, 0x59, 0x50, 0x5A, 0x5D, 0x53, 0x5E, 0x5F, 0x58, 0x54, 0x57, 0x51, 0x52,
+ 0x6C, 0x65, 0x66, 0x6B, 0x69, 0x60, 0x6A, 0x6D, 0x63, 0x6E, 0x6F, 0x68, 0x64, 0x67, 0x61, 0x62,
+ 0xBC, 0xB5, 0xB6, 0xBB, 0xB9, 0xB0, 0xBA, 0xBD, 0xB3, 0xBE, 0xBF, 0xB8, 0xB4, 0xB7, 0xB1, 0xB2,
+ 0x9C, 0x95, 0x96, 0x9B, 0x99, 0x90, 0x9A, 0x9D, 0x93, 0x9E, 0x9F, 0x98, 0x94, 0x97, 0x91, 0x92,
+ 0x0C, 0x05, 0x06, 0x0B, 0x09, 0x00, 0x0A, 0x0D, 0x03, 0x0E, 0x0F, 0x08, 0x04, 0x07, 0x01, 0x02,
+ 0xAC, 0xA5, 0xA6, 0xAB, 0xA9, 0xA0, 0xAA, 0xAD, 0xA3, 0xAE, 0xAF, 0xA8, 0xA4, 0xA7, 0xA1, 0xA2,
+ 0xDC, 0xD5, 0xD6, 0xDB, 0xD9, 0xD0, 0xDA, 0xDD, 0xD3, 0xDE, 0xDF, 0xD8, 0xD4, 0xD7, 0xD1, 0xD2,
+ 0x3C, 0x35, 0x36, 0x3B, 0x39, 0x30, 0x3A, 0x3D, 0x33, 0x3E, 0x3F, 0x38, 0x34, 0x37, 0x31, 0x32,
+ 0xEC, 0xE5, 0xE6, 0xEB, 0xE9, 0xE0, 0xEA, 0xED, 0xE3, 0xEE, 0xEF, 0xE8, 0xE4, 0xE7, 0xE1, 0xE2,
+ 0xFC, 0xF5, 0xF6, 0xFB, 0xF9, 0xF0, 0xFA, 0xFD, 0xF3, 0xFE, 0xFF, 0xF8, 0xF4, 0xF7, 0xF1, 0xF2,
+ 0x8C, 0x85, 0x86, 0x8B, 0x89, 0x80, 0x8A, 0x8D, 0x83, 0x8E, 0x8F, 0x88, 0x84, 0x87, 0x81, 0x82,
+ 0x4C, 0x45, 0x46, 0x4B, 0x49, 0x40, 0x4A, 0x4D, 0x43, 0x4E, 0x4F, 0x48, 0x44, 0x47, 0x41, 0x42,
+ 0x7C, 0x75, 0x76, 0x7B, 0x79, 0x70, 0x7A, 0x7D, 0x73, 0x7E, 0x7F, 0x78, 0x74, 0x77, 0x71, 0x72,
+ 0x1C, 0x15, 0x16, 0x1B, 0x19, 0x10, 0x1A, 0x1D, 0x13, 0x1E, 0x1F, 0x18, 0x14, 0x17, 0x11, 0x12,
+ 0x2C, 0x25, 0x26, 0x2B, 0x29, 0x20, 0x2A, 0x2D, 0x23, 0x2E, 0x2F, 0x28, 0x24, 0x27, 0x21, 0x22
+ };
+
+int sBox32(unsigned int input) {
+
+
+    return sBox[(input & 0xf)] +
+           ( sBox[((input >> 4 ) & 0xf)] << 4 ) +
+           ( sBox[((input >> 8 ) & 0xf)] << 8 ) +
+           ( sBox[((input >> 12) & 0xf)] << 12 ) +
+           ( sBox[((input >> 16) & 0xf)] << 16 ) +
+           ( sBox[((input >> 20) & 0xf)] << 20 ) +
+           ( sBox[((input >> 24) & 0xf)] << 24 ) +
+           ( sBox[((input >> 28 ) & 0xf)] << 28 )  ;
+
+}
+
+int permutationLayer0(int state0, int state1){
+    unsigned int t0 = 0;
+
+    t0  = state1 & 1;
+    t0 |= (state1 & (1<<4))>>3;
+    t0 |= (state1 & (1<<8))>>6;
+    t0 |= (state1 & (1<<12))>>9;
+    t0 |= (state1 & (1<<16))>>12;
+    t0 |= (state1 & (1<<20))>>15;
+    t0 |= (state1 & (1<<24))>>18;
+    t0 |= (state1 & (1<<28))>>21;
+    t0 |= (state0 & 1)<<8 ;
+    t0 |= (state0 & (1<<4))<<5;
+    t0 |= (state0 & (1<<8))<<2;
+    t0 |= (state0 & (1<<12))>>1;
+    t0 |= (state0 & (1<<16))>>4;
+    t0 |= (state0 & (1<<20))>>7;
+    t0 |= (state0 & (1<<24))>>10;
+    t0 |= (state0 & (1<<28))>>13;
+    t0 |= (state1 & (1<<1))<<15;
+    t0 |= (state1 & (1<<5))<<12;
+    t0 |= (state1 & (1<<9))<<9;
+    t0 |= (state1 & (1<<13))<<6;
+    t0 |= (state1 & (1<<17))<<3;
+    t0 |=  state1 & (1<<21);
+    t0 |= (state1 & (1<<25))>>3;
+    t0 |= (state1 & (1<<29))>>6;
+    t0 |= (state0 & (1<<1))<<23;
+    t0 |= (state0 & (1<<5))<<20;
+    t0 |= (state0 & (1<<9))<<17;
+    t0 |= (state0 & (1<<13))<<14;
+    t0 |= (state0 & (1<<17))<<11;
+    t0 |= (state0 & (1<<21))<<8;
+    t0 |= (state0 & (1<<25))<<5;
+    t0 |= (state0 & (1<<29))<<2;
+
+    return t0;
+}
+
+int permutationLayer1(int state0, int state1){
+
+        unsigned int t1 = 0;
+    t1 = (state1 & (1<<2))>>2;
+    t1 |= (state1 & (1<<6))>>5;
+    t1 |= (state1 & (1<<10))>>8;
+    t1 |= (state1 & (1<<14))>>11;
+    t1 |= (state1 & (1<<18))>>14;
+    t1 |= (state1 & (1<<22))>>17;
+    t1 |= (state1 & (1<<26))>>20;
+    t1 |= (state1 & (1<<30))>>23;
+    t1 |= (state0 & (1<<2))<<6;
+    t1 |= (state0 & (1<<6))<<3;
+    t1 |=  state0 & (1<<10);
+    t1 |= (state0 & (1<<14))>>3;
+    t1 |= (state0 & (1<<18))>>6;
+    t1 |= (state0 & (1<<22))>>9;
+    t1 |= (state0 & (1<<26))>>12;
+    t1 |= (state0 & (1<<30))>>15;
+    t1 |= (state1 & (1<<3))<<13;
+    t1 |= (state1 & (1<<7))<<10;
+    t1 |= (state1 & (1<<11))<<7;
+    t1 |= (state1 & (1<<15))<<4;
+    t1 |= (state1 & (1<<19))<<1;
+    t1 |= (state1 & (1<<23))>>2;
+    t1 |= (state1 & (1<<27))>>5;
+    t1 |= (state1 & (1<<31))>>8;
+    t1 |= (state0 & (1<<3))<<21;
+    t1 |= (state0 & (1<<7))<<18;
+    t1 |= (state0 & (1<<11))<<15;
+    t1 |= (state0 & (1<<15))<<12;
+    t1 |= (state0 & (1<<19))<<9;
+    t1 |= (state0 & (1<<23))<<6;
+    t1 |= (state0 & (1<<27))<<3;
+    t1 |= state0 & (1<<31);
+return t1;
+}
+
+int main()
+{
+
+    unsigned int c = 1;
+    unsigned int state0 = 8; //s63...s32
+    unsigned int state1 = 8; // s31...s0
+    unsigned int key1 = 0xffffffff; // k79...k48
+    unsigned int key2 = 0xffffffff;
+    unsigned int key3 = 0xffff;
+    
+    while(c<32) {     
+        unsigned int t0 = 0;
+        unsigned int t1 = 0;
+        state0 = state0 ^ key1;
+        state1 = state1 ^ key2;
+
+
+        state0 = sBox32(state0);
+        state1 = sBox32(state1);
+
+        t1 = permutationLayer1(state0, state1);
+        t0 = permutationLayer0(state0, state1);
+        state0 = t1;
+        state1 = t0;
+        
+        
+
+        unsigned int key1Tmp = key2<<29 | key3<<13 | key1>>19;
+        unsigned int key2Tmp = key2>>19 | key1<<13;
+        key3 = (key2<<13)>>16;
+        key1 = key1Tmp;
+        key2 = key2Tmp;
+
+        key1 = (sBox[key1>>28]<<28) | (key1 & 0xfffffff);
+        key2 = (key2^(c>>1));
+        key3 = key3 ^ ((c&1)<<15);
+
+        c++;
+    }
+    state0 = state0 ^ key1;
+    state1 = state1 ^ key2;
+
+    return 0;
+}
+
+
+
